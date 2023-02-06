@@ -14,7 +14,7 @@ void copystr(int, int, int, char, int);
 void cutstr(int, int, int, char, int);
 void pastestr(int, int, int, char, int);
 void findstr(int, int);
-void grep(int, int);
+void replace(int, int);
 
 void back_array2(int x);
 
@@ -22,40 +22,47 @@ char command[MAX_SIZE];
 char part[50][MAX_SIZE];
 char b_arr[MAX_SIZE];
 char copy[MAX_SIZE];
+char str[MAX_SIZE];
+char str1[MAX_SIZE];
+char str2[MAX_SIZE];
+int checker_end_line[MAX_SIZE];
 
 int main()
 {
-    gets(command);
-    int length = strlen(command);
-    //    printf("%d", length);
-
-    int i = 0;
-    while (command[i] != ' ' && i < strlen(command))
+    while (1)
     {
-        part[0][i] = command[i];
-        i++;
-    }
+        gets(command);
+        int length = strlen(command);
+        int i = 0;
+        while (command[i] != ' ' && i < strlen(command))
+        {
+            part[0][i] = command[i];
+            i++;
+        }
 
-    if (!(strcmp(part[0], "createfile")))
-        createfile(length, i);
-    else if (!(strcmp(part[0], "insertstr")))
-        insert(length, i);
-    else if (!(strcmp(part[0], "cat")))
-        cat(length, i);
-    else if (!(strcmp(part[0], "removestr")))
-        multi_function(length, i, 1);
-    else if (!(strcmp(part[0], "copystr")))
-        multi_function(length, i, 2);
-    else if (!(strcmp(part[0], "cutstr")))
-        multi_function(length, i, 3);
-    else if (!(strcmp(part[0], "pastestr")))
-        multi_function(length, i, 3);
-    else if (!(strcmp(part[0], "find")))
-        findstr(length, i);
-    else if (!(strcmp(part[0], "grep")))
-        grep(length, i);
-    else
-        printf("Invalid command");
+        if (!(strcmp(part[0], "createfile")))
+            createfile(length, i);
+        else if (!(strcmp(part[0], "insertstr")))
+            insert(length, i);
+        else if (!(strcmp(part[0], "cat")))
+            cat(length, i);
+        else if (!(strcmp(part[0], "removestr")))
+            multi_function(length, i, 1);
+        else if (!(strcmp(part[0], "copystr")))
+            multi_function(length, i, 2);
+        else if (!(strcmp(part[0], "cutstr")))
+            multi_function(length, i, 3);
+        else if (!(strcmp(part[0], "pastestr")))
+            multi_function(length, i, 4);
+        else if (!(strcmp(part[0], "find")))
+            findstr(length, i);
+        else if (!(strcmp(part[0], "replace")))
+            replace(length, i);
+        else if (!(strcmp(command, "exit")))
+            return 0;
+        else
+            printf("Invalid command");
+    }
     //    access(command, F_OK) == 0
 }
 
@@ -169,58 +176,36 @@ return;
     }
 }
 //
-char str[MAX_SIZE];
-int checker_end_line[MAX_SIZE];
+
 
 void insertstr_(int l, int c, int d1_p) {
     back_array2(d1_p);
-    
-
-    //baraye nomre
-    /*
-    FILE* file;
-    file = fopen(b_arr, "a+");
-    for (int i = 0; i < strlen(str); i++)
-    {
-        fputc("%c", str[i]);
-    }
+    FILE* file = fopen(b_arr, "a");
+    fputs(str, file);
     fclose(file);
-    */
-    FILE* file;
-    back_array2(d1_p);
-    file = fopen(b_arr, "r");
-    char tmp = 'f';
-    int cnt_of_endline = 0;
-    while (tmp != EOF)
+    /*int line = 0, i = 0;
+    char tmp = '\0';
+    char file_input[MAX_SIZE][MAX_SIZE];
+    FILE* file = fopen(b_arr, "r");
+    while (file_input[line][i] != EOF)
     {
-        tmp = fgetc(file);
-        printf("%c", tmp);
-    }
-//    if (side == 'f')
-//    {
-        while (tmp != EOF)
+        i++;
+        file_input[line][i] = fgetc(file);
+        printf("%s", file_input[line]);
+        if (tmp == '\n')
         {
-            /*
-            if (cnt_of_endline == l - 1)
-            {
-                printf("dvrbtnbfgnbgn");
-                for (int i = 0; i < c; i++)
-                {
-                    fputc(str[i], file);
-                }
-            }
-            */
-            tmp = fgetc(file);
-            fputc(file, tmp);
-            if (tmp == '\n')
-            {
-                cnt_of_endline++;
-            }
+            i = 0;
+            line++;
         }
-        
-//    }
-    
+        printf("%s", file_input[line]);
+    }
     fclose(file);
+    printf("%s", file_input[1]);
+    for (int i = 0; i < line; i++)
+    {
+        printf("%s", file_input[i]);
+    }
+    */
 }
 
 void insert(int length, int i) // insertstr –-file /root/dir1/dir2/file.txt –-str Salam –pos 2:5
@@ -310,14 +295,14 @@ void insert(int length, int i) // insertstr –-file /root/dir1/dir2/file.txt �
             break;
         }
     }
-    int count = 123;
+    /*int count = 123;
     for (int  i = 0; i < count; i++)
     {
         printf("%c", str[i]);
     }
     printf("\n"); return; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //printf("%s", str);
-    i += 6;     //    printf("%c", command[i]);return;
+    */i += 6;     //    printf("%c", command[i]);return;
 
     char line[10] = {0};
     int counter = 0;
@@ -524,7 +509,7 @@ void copystr(int l, int c, int size, char side, int d1_p)
 
 void pastestr(int l, int c, int size, char side, int d1_p)
 {
-    int llkl;
+    
 }
 
 
@@ -565,6 +550,14 @@ void multi_function(int length, int i, int type) //remove(1) & copy(2) & cut(3)/
             return;
         }
     }
+    if (type == 4)
+    {
+        FILE* file = fopen(b_arr, "a");
+        fputs(copy, file);;
+        fclose(file);
+        return;
+    }
+    
     int l = 0, c = 0; //line and character
     while ((char)command[i] != ':')
     {
@@ -602,70 +595,357 @@ void multi_function(int length, int i, int type) //remove(1) & copy(2) & cut(3)/
     }
 }
 
-void findstr2(int d1_p)
+void findstr2(int d1_p, char flag, int at_count)
 {
-
     FILE* file = fopen(b_arr, "r");
-    char tmp = '\0';
+    char tmp = '\0', tmp1 = '\0';
+    
     int i = 0;
+    int count = 0; //at, all, count
+    int tedad = 0;
+    
     while (tmp != EOF)
     {
-        tmp = fgetc(file);
-        if (tmp == str[0])
+        //printf("%c1\n", tmp1);
+        if (tmp == str[0] || tmp1 == str[0])
         {
-            int  tmp_int = i;
-            for (int x = 0; x < strlen(str); x++ && tmp_int++)
+            //return;
+            //printf("%c2", tmp1);
+            for (int x = 0; x < strlen(str); x++)
             {
-                if (str[x] != command[tmp_int])
+                /*if (tmp == ' ' || tmp == '\n') //\n ؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟حسابه؟
+                {
+                    tedad++;
+                }*/
+                tmp = fgetc(file);
+                //printf("%c ", command[tmp_int]);
+                //printf("|tmp %c tmp1 %c|", tmp, tmp1);
+                if (str[x] != tmp && tmp1 != str[x] && tmp1 != '\0')
                 {
                     i++;
+                    tmp1 = tmp;
+                    //printf("\nNULL%d\n", x);
                     break;
                 }
+                /*else {
+                    printf("\ni = %d\n", i);
+                    return;
+                }*/
                 if (x == strlen(str) - 1)
                 {
-                    printf("%d", i);
-                    //if()
+                    if (flag == '\0')
+                    {
+                        printf("%d", i);
+                        fclose(file);
+                        return;
+                    }
+                    else if (flag == 'h') //all
+                    {
+                        
+                        if (count)
+                        {
+                            printf(", %d", i);
+                        }
+                        else
+                        {
+                            printf("%d", i);
+                        }
+                        count++;
+                        i++;
+                    }
+                    else if (flag == 'c') //count
+                    {
+                        count++;
+                        i++;
+                    }
+                    else if (flag == 'a') //at
+                    {
+                        count++;
+                        if (count == at_count)
+                        {
+                            printf("%d", i);
+                            fclose(file);
+                            return;
+                        }
+                        i++;
+                    }
+                    else if (flag == 'b')
+                    {
+                        printf("%d", tedad);
+                        fclose(file);
+                        return;
+                    }
+                    
                 }
             }
         }
         i++;
+        tmp = fgetc(file);
+    }
+    if (flag == '\0')
+    {
+        printf("%d", -1);
     }
     
+    if (flag == 'a')
+    {
+        printf("%d", -1);
+    }
+    else if (flag == 'c') //count
+    {
+        printf("%d", count);
+    }
+    fclose(file);
+    return;
 }
 
-findstr(int length, int i) //find -–str "this is an expression containing white-space." -–file /root/dir1/dir2/file.txt BAG
+void findstr(int length, int i) //find -–str sb -–file /root/dir1/dir2/file.txt BAG
 {
+    i += 7;   //printf("%c", command[i]);
+    int checker1 = 0; // check str
+    if (command[i] == '"')
+    {
+        checker1 = 1;
+    }
+    
     for (int i = 0; i < MAX_SIZE; i++)
     {
         str[i] = '\0';
     }
-    
-    i += 7;
-    int checker = 0;
-    if (command[i] == '"') 
+
+    int tmp = 0;
+    if (checker1 == 0)
+    {
+        while(command[i] != ' ')
+        {
+            str[tmp] = command[i];
+            i++;
+            tmp++;
+        }
+    }
+
+    int checker = 0, d1_p = 0, d2_p = 1; // check file
+    part[0][i] = command[i];
+    i += 8;  //printf("%c", command[i]);return;
+    if (command[i] == '"')
     {
         i++;
         checker = 1;
     }
-    int tmp = i;
+
+    int temp = i;
+    int checker_flag = 1;
     if (checker == 0)
     {
-        for (int q = tmp; command[i] != ' ' ; q++, i++)
+        while (command[temp] != ' ' && temp < length && temp++)
         {
-           str[q - tmp] = command[i];
+            continue;
+        }
+        if (temp == length)
+        {
+            checker_flag = 0;
         }
     }
     else
     {
-        for (int q = tmp; command[i + 2] != '-' || command[i + 3] != '-'; q++, i++) // in ghalateeeee!!!!!!!!!
+        while (command[temp] != '"' && temp < length && temp++)
         {
-           str[q - tmp] = command[i];
+            continue;
         }
-
+        if (temp == length - 1)
+        {
+            checker_flag = 0;
+        }
     }
-    i += 9;    //printf("%c", command[i]);return;
-    int d1_p = 0, d2_p = 0;
-    checker = 0;
+    //printf("%d", checker_flag);
+    //return;
+    // part-part
+    if (!checker_flag)
+    {
+        for (; i < length; i++)
+        {
+            if (checker == 1 && i == length - 1)
+                break;
+            else if (command[i] == '/')
+            {
+                command[i] = '\\';
+                d1_p++;
+                d2_p = 0;
+                continue;
+            }
+            part[d1_p][d2_p] = command[i];
+            d2_p++;
+        }
+    }
+    else
+    {
+        for (; i < length; i++)
+        {
+            if (checker == 1 && command[i] == '"')
+                break;
+            else if (checker == 0 && command[i] == ' ')
+                break;
+            else if (command[i] == '/')
+            {
+                command[i] = '\\';
+                d1_p++;
+                d2_p = 0;
+                continue;
+            }
+            part[d1_p][d2_p] = command[i];
+            d2_p++;
+        }
+    }
+    /*back_array2(d1_p);
+    printf("%d | %s",checker_flag, b_arr);
+    return;*/
+    //check file exist
+    {
+        for (int x = 1; x <= d1_p; x++)
+        {
+            back_array2(x);
+            if (access(b_arr, F_OK)) //don"t exist
+            {
+                printf("This file dosn't exist\n");
+                return;
+            }
+        }
+    }
+    char flag = '\0';
+    int at_count = -1; 
+    if (checker_flag)
+    {
+        i+=2;
+        if (command[i] == 'a' && command[i + 1] == 'l')
+        {
+            flag = 'h'; //hame
+        }
+        else if (command[i] == 'a')
+        {
+            flag = command[i];
+            at_count = command[i + 3] - 48;
+        }
+        
+        else
+        {
+            flag = command[i];
+        }
+    }
+    findstr2(d1_p, flag, at_count);
+}
+
+/*void replace_str()
+{
+    FILE* file = fopen(b_arr, "r");
+    char tmp = '\0', tmp1 = '\0';
+    
+    int i = 0;
+    int tmmmmmp = 0;
+    while (tmp != EOF)
+    {
+        //printf("%c1\n", tmp1);
+        if (tmp == str[0] || tmp1 == str[0])
+        {
+            //return;
+            //printf("%c2", tmp1);
+            for (int x = 0; x < strlen(str); x++)
+            {
+                /*if (tmp == ' ' || tmp == '\n') //\n ؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟؟حسابه؟
+                {
+                    tedad++;
+                }
+                tmp = fgetc(file);
+                //printf("%c ", command[tmp_int]);
+                //printf("|tmp %c tmp1 %c|", tmp, tmp1);
+                if (str[x] != tmp && tmp1 != str[x] && tmp1 != '\0')
+                {
+                    i++;
+                    tmp1 = tmp;
+                    break;
+                }
+
+                if (x == strlen(str) - 1)
+                {
+                    tmmmmmp = 1;
+                    break;
+                }
+            }
+        }
+        if (tmmmmmp == 1)
+        {
+            break;
+        }
+        
+        i++;
+        tmp = fgetc(file);
+    }
+    if (tmmmmmp == 1)
+    {
+        printf("%d", -1);
+        fclose(file);
+        return;
+    }
+    char file_string[MAX_SIZE][MAX_SIZE];
+    fopen(b_arr, "r");
+    while (tmp != EOF)
+    {
+        
+    }
+    
+    fopen(b_arr, a+);
+    
+
+}
+*/
+void replace(int length, int i) //replace -–str1 df -–str2 dvf -–file /root/dir1/dir2/file.txt 
+{
+    i += 8;   //printf("%c", command[i]); return;
+    int checker1 = 0; // check str1
+    if (command[i] == '"')
+    {
+        checker1 = 1;
+    }
+    
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+        str1[i] = '\0';
+    }
+    
+    int tmp = 0;
+    if (checker1 == 0)
+    {
+        while(command[i] != ' ')
+        {
+            str1[tmp] = command[i];
+            i++;
+            tmp++;
+        }
+    }
+    i += 8;
+    int checker2 = 0; // check str2
+    if (command[i] == '"')
+    {
+        checker2 = 1;
+    }
+    
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+        str2[i] = '\0';
+    }
+    
+    tmp = 0;
+    if (checker2 == 0)
+    {
+        while(command[i] != ' ')
+        {
+            str2[tmp] = command[i];
+            i++;
+            tmp++;
+        }
+    }
+    i+= 8;//printf("%c", command[i + 8]); return;
+    
+    int checker = 0, d1_p = 0, d2_p = 1;
     if (command[i] == '"')
     {
         i++;
@@ -689,19 +969,13 @@ findstr(int length, int i) //find -–str "this is an expression containing whit
         part[d1_p][d2_p] = command[i];
         d2_p++;
     }
-    /*
-    for (int i = 0; i < d1_p; i++)
-    {
-        printf("%s", part[i]);
-    }
-    */
+
     {
     //check file exist
-    //printf("%d", d1_p);
         for (int x = 1; x <= d1_p; x++)
         {
             back_array2(x);
-            //printf("%s\n", b_arr);
+    //        printf("%s\n", b_arr);
             if (access(b_arr, F_OK)) //don"t exist
             {
                 //printf("%s\n", b_arr);
@@ -710,11 +984,5 @@ findstr(int length, int i) //find -–str "this is an expression containing whit
             }
         }
     }
-    findstr2(d1_p);
-}
-
-
-void grep(int length, int i) { //grep -c –-str "proj" –files main.txt text.txt project.txt
-    i += 2;
-    printf("%c", command[i + 2]);
+    //replace_str();
 }
